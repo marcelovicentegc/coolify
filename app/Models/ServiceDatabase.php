@@ -78,11 +78,15 @@ class ServiceDatabase extends BaseModel
     public function databaseType()
     {
         $image = str($this->image)->before(':');
-        if ($image->contains('postgres') || $image->contains('postgis')) {
-            $image = 'postgresql';
+        if ($image->contains('supabase/postgres')) {
+            $finalImage = 'supabase/postgres';
+        } elseif ($image->contains('postgres') || $image->contains('postgis')) {
+            $finalImage = 'postgresql';
+        } else {
+            $finalImage = $image;
         }
 
-        return "standalone-$image";
+        return "standalone-$finalImage";
     }
 
     public function getServiceDatabaseUrl()
@@ -137,6 +141,6 @@ class ServiceDatabase extends BaseModel
             str($this->databaseType())->contains('postgres') ||
             str($this->databaseType())->contains('postgis') ||
             str($this->databaseType())->contains('mariadb') ||
-            str($this->databaseType())->contains('mongodb');
+            str($this->databaseType())->contains('mongo');
     }
 }
